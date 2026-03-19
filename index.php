@@ -199,7 +199,7 @@
 
         async function checkUpdate() {
         try {
-            const res = await fetch("/versao.json?cache=" + Date.now());
+            const res = await fetch("/lumassali/versao.json?cache=" + Date.now());
             const data = await res.json();
 
             if (versaoAtual === null) {
