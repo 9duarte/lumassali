@@ -32,5 +32,6 @@
             $result->execute();
         }
     }
+    novaVersao();
     header('Location: admin.php');
 ?>

@@ -194,5 +194,30 @@
             ?>
         </div>
     </div>
+    <script>
+        let versaoAtual = null;
+
+        async function checkUpdate() {
+        try {
+            const res = await fetch("/versao.json?cache=" + Date.now());
+            const data = await res.json();
+
+            if (versaoAtual === null) {
+            versaoAtual = data.versao;
+            return;
+            }
+
+            if (data.versao !== versaoAtual) {
+            console.log("Atualização detetada → reload");
+            location.reload();
+            }
+        } catch (err) {
+            console.error("Erro ao verificar versão", err);
+        }
+        }
+
+        // verifica a cada 5 segundos
+        setInterval(checkUpdate, 5000);
+    </script>
 </body>
 </html>

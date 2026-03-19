@@ -15,4 +15,12 @@
     // }
     // echo "<script>console.error(" . json_encode("aaaaaaa") . ");</script>";
     // exit;
+    function novaVersao() {
+        $file = 'versao.json';
+        $data = json_decode(file_get_contents($file), true);
+
+        $data['versao']++;
+
+        file_put_contents($file, json_encode($data));
+    }
 ?>  

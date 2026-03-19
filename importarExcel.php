@@ -43,6 +43,7 @@
         $result = $con->prepare($sql);
         $result->execute();
     }
-
+    
+    novaVersao();
     header('Location: admin.php');
 ?>
