@@ -68,3 +68,86 @@ button {
 button:hover {
     background: #1503b6;
 }
+
+    /* Remove a margem branca que o browser mete por defeito à volta da
+     página — é essa margem que aparecia como "borda branca" em baixo. */
+  html, body { margin: 0; padding: 0; }
+ 
+  /* Faz a página ocupar sempre pelo menos a altura do ecrã, e o wrapper
+     do balcão crescer para preencher o espaço que sobra por baixo da
+     tabela de preços de cima. */
+  body { display: flex; flex-direction: column; min-height: 100vh; box-sizing: border-box; }
+  #balcao-wrapper { flex: 1; display: flex; flex-direction: column; }
+ 
+    #balcao-autocarros {
+    background: #0d1220;
+    color: #fff;
+    /* Só os cantos de cima arredondados; em baixo o painel é o próprio
+       fundo da página, por isso cantos arredondados aí mostravam branco. */
+    border-radius: 18px 18px 0 0;
+    padding: 1.5rem 2rem;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* Empurra o painel para o fundo do espaço disponível no wrapper,
+       em vez de ficar colado logo a seguir à tabela de preços. */
+    margin-top: auto;
+    /* Tamanho fixo, para não encolher com menos autocarros (0 a 6).
+       Ajusta este número se não bater certo com o teu ecrã. */
+    min-height: 805px;
+  }
+
+ 
+  .ac-header { display: flex; align-items: center; gap: 1.2rem; padding-bottom: 1.2rem; }
+  .ac-pin {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: #3a2f10; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; flex-shrink: 0;
+  }
+  .ac-titulo { flex: 1; }
+  .ac-label { color: #8b93a7; letter-spacing: .1em; font-size: .95rem; font-weight: 600; }
+  .ac-titulo h2 { margin: .1rem 0; font-size: 2.2rem; letter-spacing: .02em; }
+  .ac-sub { color: #8b93a7; font-size: 1.1rem; }
+  .ac-relogio { text-align: right; flex-shrink: 0; }
+  .ac-hora { font-size: 2.6rem; font-weight: 700; line-height: 1; }
+  .ac-dia { color: #c3c9d6; margin-top: .3rem; }
+  .ac-data { color: #8b93a7; font-size: .95rem; }
+ 
+  .ac-lista { display: flex; flex-direction: column; gap: .9rem; flex: 1; justify-content: flex-start; }
+ 
+  .ac-item {
+    display: flex; align-items: center; gap: 1.2rem;
+    background: #141a2b; border-radius: 14px; padding: 1rem 1.4rem;
+    border-left: 6px solid var(--cor);
+  }
+  .ac-item.chegando { border-left-color: #facc15; background: #1e1a0f; }
+  .ac-icone { color: var(--cor); font-size: 1.8rem; flex-shrink: 0; width: 2.4rem; text-align: center; }
+  .ac-linha { font-size: 2rem; font-weight: 800; min-width: 4.5rem; }
+  .ac-tags { display: flex; flex-direction: column; gap: .25rem; flex-shrink: 0; }
+  .ac-tag {
+    background: #263049; color: #c3c9d6; font-size: .7rem; font-weight: 700;
+    padding: .1rem .5rem; border-radius: 999px; text-align: center;
+  }
+  .ac-destino { flex: 1; min-width: 0; }
+  .ac-destino .principal { font-size: 1.35rem; font-weight: 700; }
+  .ac-destino .via { color: #8b93a7; font-size: 1rem; }
+  .ac-quando { text-align: right; flex-shrink: 0; padding-left: 1rem; border-left: 1px solid #263049; }
+  .ac-min { font-size: 1.7rem; font-weight: 700; }
+  .ac-min.chegando { color: #facc15; }
+  .ac-hh { color: #8b93a7; font-size: 1rem; }
+  .ac-status {
+    margin-top: .3rem; display: inline-block;
+    background: #123023; color: #4ade80; border: 1px solid #1f4d38;
+    font-size: .75rem; font-weight: 700; padding: .15rem .6rem; border-radius: 999px;
+  }
+ 
+  .ac-footer {
+    display: flex; justify-content: space-between; color: #8b93a7;
+    font-size: .9rem; padding-top: 1.2rem; margin-top: auto;
+  }
+  .ac-dot {
+    display: inline-block; width: .5rem; height: .5rem; border-radius: 50%;
+    background: #22c55e; margin-right: .3rem;
+  }
+
