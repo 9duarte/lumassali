@@ -69,7 +69,7 @@ button:hover {
     background: #1503b6;
 }
 
-    /* Remove a margem branca que o browser mete por defeito à volta da
+/* Remove a margem branca que o browser mete por defeito à volta da
     página — é essa margem que aparecia como "borda branca" em baixo. */
 html, body { margin: 0; padding: 0; }
 
@@ -95,7 +95,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; box-sizing: bor
     margin-top: auto;
     /* Tamanho fixo, para não encolher com menos autocarros (0 a 6).
         Ajusta este número se não bater certo com o teu ecrã. */
-    min-height: 650px;
+    min-height: 760px;
 }
 
 .ac-header { display: flex; align-items: center; gap: 1.2rem; padding-bottom: 1.2rem; }
@@ -113,29 +113,29 @@ body { display: flex; flex-direction: column; min-height: 100vh; box-sizing: bor
 .ac-dia { color: #c3c9d6; margin-top: .3rem; }
 .ac-data { color: #8b93a7; font-size: .95rem; }
 
-.ac-lista { display: flex; flex-direction: column; gap: .5rem; flex: 1; justify-content: flex-start; }
+.ac-lista { display: flex; flex-direction: column; gap: .7rem; flex: 1; justify-content: flex-start; }
 
 .ac-item {
-    display: flex; align-items: center; gap: .8rem;
-    background: #141a2b; border-radius: 10px; padding: .5rem .9rem;
-    border-left: 5px solid var(--cor);
+    display: flex; align-items: center; gap: 1rem;
+    background: #141a2b; border-radius: 12px; padding: .75rem 1.1rem;
+    border-left: 6px solid var(--cor);
 }
-.ac-icone { color: var(--cor); font-size: 1.2rem; flex-shrink: 0; width: 1.7rem; text-align: center; }
-.ac-linha { font-size: 1.3rem; font-weight: 800; min-width: 3rem; }
-.ac-tags { display: flex; flex-direction: column; gap: .15rem; flex-shrink: 0; }
+.ac-icone { color: var(--cor); font-size: 1.5rem; flex-shrink: 0; width: 2rem; text-align: center; }
+.ac-linha { font-size: 1.7rem; font-weight: 800; min-width: 3.8rem; }
+.ac-tags { display: flex; flex-direction: column; gap: .2rem; flex-shrink: 0; }
 .ac-tag {
-    background: #263049; color: #c3c9d6; font-size: .6rem; font-weight: 700;
-    padding: .05rem .4rem; border-radius: 999px; text-align: center;
+    background: #263049; color: #c3c9d6; font-size: .7rem; font-weight: 700;
+    padding: .08rem .45rem; border-radius: 999px; text-align: center;
 }
 .ac-destino { flex: 1; min-width: 0; }
-.ac-destino .principal { font-size: 1rem; font-weight: 700; }
-.ac-quando { text-align: right; flex-shrink: 0; padding-left: .8rem; border-left: 1px solid #263049; }
-.ac-min { font-size: 1.2rem; font-weight: 700; }
-.ac-hh { color: #8b93a7; font-size: .8rem; }
+.ac-destino .principal { font-size: 1.25rem; font-weight: 700; }
+.ac-quando { text-align: right; flex-shrink: 0; padding-left: 1rem; border-left: 1px solid #263049; }
+.ac-min { font-size: 1.5rem; font-weight: 700; }
+.ac-hh { color: #8b93a7; font-size: .95rem; }
 .ac-status {
-    margin-top: .15rem; display: inline-block;
+    margin-top: .2rem; display: inline-block;
     background: #123023; color: #4ade80; border: 1px solid #1f4d38;
-    font-size: .65rem; font-weight: 700; padding: .1rem .5rem; border-radius: 999px;
+    font-size: .7rem; font-weight: 700; padding: .1rem .55rem; border-radius: 999px;
 }
 
 .ac-footer {
