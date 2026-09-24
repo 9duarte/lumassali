@@ -202,14 +202,11 @@
             const CORES = ['#3b9dff', '#22c55e', '#f97316', '#a855f7'];
             const ENDPOINT = 'proximos_autocarros.php';
             const REFRESH_DATA_MS = 30000;
-            const SWITCH_MS = 30000;
             
             const grid = document.getElementById('autocarros-grid');
             const elHora = document.getElementById('ac-hora');
             const elDia = document.getElementById('ac-dia');
             const elData = document.getElementById('ac-data');
-            const painelPrecos = document.getElementById('balcao-precos');
-            const painelBus = document.getElementById('balcao-autocarros');
             
             function el(tag, cls, texto) {
                 const n = document.createElement(tag);
@@ -280,17 +277,10 @@
                 }
             }
             
-            function alternar() {
-                // const mostrarBus = painelBus.style.display === 'none';
-                // painelPrecos.style.display = mostrarBus ? 'none' : '';
-                // painelBus.style.display = mostrarBus ? '' : 'none';
-            }
-            
             atualizarRelogio();
             setInterval(atualizarRelogio, 1000);
             atualizarAutocarros();
             setInterval(atualizarAutocarros, REFRESH_DATA_MS);
-            setInterval(alternar, SWITCH_MS);
         })();
     </script>
 </body>
