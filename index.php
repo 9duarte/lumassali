@@ -149,8 +149,7 @@
         <p>PS.: Aos produtos abrangidos pelo Sistema (Volta) acresce uma taxa de 0,10 €.</p>
     </div>
     <div id="balcao-wrapper">
-<!-- style="display:none;" -->
-        <div id="balcao-autocarros">
+        <div id="balcao-autocarros" style="display:none;">
             <div class="ac-header">
                 <div class="ac-pin">📍</div>
                 <div class="ac-titulo">
@@ -172,8 +171,6 @@
                 <span>Mobilidade para uma região melhor 🍃</span>
             </div>
         </div>
-
-
     </div>
 
     <script>
@@ -203,24 +200,24 @@
 
         (function () {
             const CORES = ['#3b9dff', '#22c55e', '#f97316', '#a855f7'];
- 
-            // ATENÇÃO: tira o "?test=true" quando quiseres os dados REAIS.
             const ENDPOINT = 'proximos_autocarros.php';
- 
             const REFRESH_DATA_MS = 30000;
- 
+            const SWITCH_MS = 30000;
+            
             const grid = document.getElementById('autocarros-grid');
             const elHora = document.getElementById('ac-hora');
             const elDia = document.getElementById('ac-dia');
             const elData = document.getElementById('ac-data');
- 
+            const painelPrecos = document.getElementById('balcao-precos');
+            const painelBus = document.getElementById('balcao-autocarros');
+            
             function el(tag, cls, texto) {
                 const n = document.createElement(tag);
                 if (cls) n.className = cls;
                 if (texto !== undefined) n.textContent = texto;
                 return n;
             }
- 
+            
             function atualizarRelogio() {
                 const agora = new Date();
                 elHora.textContent = agora.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
@@ -228,47 +225,52 @@
                 elDia.textContent = dia.charAt(0).toUpperCase() + dia.slice(1);
                 elData.textContent = agora.toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
             }
- 
+            
             async function atualizarAutocarros() {
                 try {
                     const r = await fetch(ENDPOINT, { cache: 'no-store' });
                     const d = await r.json();
                     grid.replaceChildren();
- 
+                
                     if (!d.ok || d.departures.length === 0) {
                         grid.append(el('p', null, d.ok ? 'Sem passagens previstas nas próximas horas' : 'Informação indisponível de momento'));
                         return;
                     }
- 
+                
                     d.departures.forEach(function (p, i) {
                         const cor = CORES[i % CORES.length];
- 
-                        const item = el('div', 'ac-item' + (p.chegando ? ' chegando' : ''));
+                
+                        const item = el('div', 'ac-item');
                         item.style.setProperty('--cor', cor);
- 
+                
                         item.append(el('div', 'ac-icone', '🚌'));
                         item.append(el('div', 'ac-linha', p.line));
- 
+                
                         const tags = el('div', 'ac-tags');
                         if (p.agency) tags.append(el('div', 'ac-tag', p.agency));
                         if (p.operator) tags.append(el('div', 'ac-tag', p.operator));
                         item.append(tags);
- 
+                
+                        // Junta o "via X" ao fim do destino, na mesma linha e mesmo
+                        // tamanho, só se o destino ainda não o tiver (a API às vezes já
+                        // traz "... VIA PEDOME" incluído no próprio destino).
+                        let textoDestino = p.destination;
+                        if (p.via && !/\bvia\b/i.test(textoDestino)) {
+                        textoDestino += ' via ' + p.via;
+                        }
                         const dest = el('div', 'ac-destino');
-                        dest.append(el('div', 'principal', p.destination));
-                        if (p.via) dest.append(el('div', 'via', 'via ' + p.via));
+                        dest.append(el('div', 'principal', textoDestino));
                         item.append(dest);
- 
+                
                         const quando = el('div', 'ac-quando');
-                        const textoMin = p.chegando ? 'A chegar' : p.minutes + ' min';
-                        quando.append(el('div', 'ac-min' + (p.chegando ? ' chegando' : ''), textoMin));
+                        quando.append(el('div', 'ac-min', p.minutes + ' min'));
                         quando.append(el('div', 'ac-hh', p.time));
-                        if (p.status && !p.chegando) quando.append(el('div', 'ac-status', p.status));
+                        if (p.status) quando.append(el('div', 'ac-status', p.status));
                         item.append(quando);
- 
+                
                         grid.append(item);
                     });
- 
+                
                     if (d.stale) {
                         grid.append(el('p', null, '(informação possivelmente desatualizada)'));
                     }
@@ -277,11 +279,18 @@
                     grid.append(el('p', null, 'Informação indisponível de momento'));
                 }
             }
- 
+            
+            function alternar() {
+                const mostrarBus = painelBus.style.display === 'none';
+                painelPrecos.style.display = mostrarBus ? 'none' : '';
+                painelBus.style.display = mostrarBus ? '' : 'none';
+            }
+            
             atualizarRelogio();
             setInterval(atualizarRelogio, 1000);
             atualizarAutocarros();
             setInterval(atualizarAutocarros, REFRESH_DATA_MS);
+            setInterval(alternar, SWITCH_MS);
         })();
     </script>
 </body>

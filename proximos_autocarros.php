@@ -25,7 +25,7 @@ const CACHE_TTL       = 30;    // segundos entre pedidos reais à API
 const STALE_MAX_AGE   = 600;   // se a API falhar, usa a cache antiga até 10 min
 const MAX_DEPARTURES  = 5;     // quantas passagens mostrar no ecrã
 const MAX_HORIZON_MIN = 180;   // ignora passagens a mais de 3 h
-const GRACE_MIN       = 10;    // continua a mostrar até 10 min DEPOIS da hora prevista (pode estar atrasado)
+const GRACE_MIN       = 5;     // continua a mostrar até 5 min DEPOIS da hora prevista (pode estar atrasado)
 
 // Tradução dos estados que a API devolve
 const STATUS_LABELS = [
@@ -33,7 +33,6 @@ const STATUS_LABELS = [
     'DELAYED' => 'Atrasado',
     'EARLY'   => 'Adiantado',
     'LATE'    => 'Atrasado',
-    'DELAY'    => 'Atrasado',
 ];
 
 $cacheFile = sys_get_temp_dir() . '/autocarros_agrinha_cache.json';
@@ -45,11 +44,11 @@ $cacheFile = sys_get_temp_dir() . '/autocarros_agrinha_cache.json';
 if (isset($_GET['test'])) {
     $now = time();
     $mock = [
-        ['line' => '453', 'destination' => 'Carreira (Fojo)', 'via' => 'Pedome', 'status' => 'A horas', 'chegando' => false, 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now + 4 * 60), 'minutes' => 4],
-        ['line' => '453', 'destination' => 'Carreira (Fojo)', 'via' => 'Pedome', 'status' => 'A horas', 'chegando' => false, 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now + 4 * 60), 'minutes' => 4],
-        ['line' => '451', 'destination' => 'Pedro Marques (Delães)', 'via' => 'Ruivães (Cova)', 'status' => 'Atrasado', 'chegando' => false, 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now + 28 * 60), 'minutes' => 28],
-        ['line' => '9803', 'destination' => 'Vizela (Centro de Saúde)', 'via' => '', 'status' => 'A horas', 'chegando' => false, 'agency' => 'AVE', 'operator' => 'AVE MOBILIDADE', 'time' => date('H:i', $now + 41 * 60), 'minutes' => 41],
-        ['line' => '453', 'destination' => 'Fojo (Carreira)', 'via' => 'Pedome', 'status' => 'A horas', 'chegando' => false, 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now + 62 * 60), 'minutes' => 62],
+        ['line' => '453', 'destination' => 'Carreira (Fojo)', 'via' => 'Pedome', 'status' => 'A horas', 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now + 4 * 60), 'minutes' => 4],
+        ['line' => '162', 'destination' => 'Igreja de Riba de Ave', 'via' => 'Landim', 'status' => 'A horas', 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now), 'minutes' => 0],
+        ['line' => '451', 'destination' => 'Pedro Marques (Delães)', 'via' => 'Ruivães (Cova)', 'status' => 'Atrasado', 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now + 28 * 60), 'minutes' => 28],
+        ['line' => '9803', 'destination' => 'Vizela (Centro de Saúde)', 'via' => '', 'status' => 'A horas', 'agency' => 'AVE', 'operator' => 'AVE MOBILIDADE', 'time' => date('H:i', $now + 41 * 60), 'minutes' => 41],
+        ['line' => '453', 'destination' => 'Fojo (Carreira)', 'via' => 'Pedome', 'status' => 'A horas', 'agency' => 'MOB', 'operator' => 'SBST', 'time' => date('H:i', $now + 62 * 60), 'minutes' => 62],
     ];
 
     // ?test=vazio -> testa o estado "sem passagens"
@@ -133,7 +132,8 @@ function collectDepartures(array $data): array
             $out[] = [
                 'ts'          => (int) round($base + ((float) $ms) / 1000),
                 'line'        => (string) ($p['line'] ?? $service['no'] ?? '?'),
-                // último destino (nome limpo), não o nome da rota inteira
+                // se a API já traz um destino "limpo", usa-o; senão usa o
+                // último stop como alternativa
                 'destination' => (string) ($p['destination'] ?? $p['last_stop_name'] ?? ''),
                 'via'         => $via,
                 'status'      => (string) ($p['load'] ?? ''),
@@ -202,24 +202,21 @@ foreach (($cache['departures'] ?? []) as $d) {
         continue;
     }
 
-    // Depois da hora prevista (ou mesmo agora), o autocarro pode só estar
-    // atrasado. Em vez de "-3 min", mostra "a chegar".
-    $chegando = $minutes <= 0;
+    // Depois da hora prevista, os minutos passariam a negativo. Em vez
+    // disso, mostra sempre "0 min" (nunca negativo) durante os GRACE_MIN
+    // minutos seguintes — o autocarro pode só estar atrasado.
     $statusBruto = strtoupper($d['status']);
-    $statusLabel = $chegando
-        ? 'A chegar'
-        : (STATUS_LABELS[$statusBruto] ?? ($d['status'] !== '' ? $d['status'] : ''));
+    $statusLabel = STATUS_LABELS[$statusBruto] ?? ($d['status'] !== '' ? $d['status'] : '');
 
     $departures[] = [
         'line'        => $d['line'],
         'destination' => $d['destination'],
         'via'         => $d['via'],
         'status'      => $statusLabel,
-        'chegando'    => $chegando,
         'agency'      => $d['agency'],
         'operator'    => $d['operator'],
         'time'        => date('H:i', $d['ts']),
-        'minutes'     => $minutes,
+        'minutes'     => max($minutes, 0),
     ];
     if (count($departures) >= MAX_DEPARTURES) {
         break;
