@@ -95,7 +95,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; box-sizing: bor
     margin-top: auto;
     /* Tamanho fixo, para não encolher com menos autocarros (0 a 6).
         Ajusta este número se não bater certo com o teu ecrã. */
-    min-height: 660px;
+    min-height: 600px;
 }
 
 .ac-header { display: flex; align-items: center; gap: 1.2rem; padding-bottom: 1.2rem; }
