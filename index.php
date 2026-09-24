@@ -149,7 +149,7 @@
         <p>PS.: Aos produtos abrangidos pelo Sistema (Volta) acresce uma taxa de 0,10 €.</p>
     </div>
     <div id="balcao-wrapper">
-        <div id="balcao-autocarros" style="display:none;">
+        <div id="balcao-autocarros">
             <div class="ac-header">
                 <div class="ac-pin">📍</div>
                 <div class="ac-titulo">
@@ -281,9 +281,9 @@
             }
             
             function alternar() {
-                const mostrarBus = painelBus.style.display === 'none';
-                painelPrecos.style.display = mostrarBus ? 'none' : '';
-                painelBus.style.display = mostrarBus ? '' : 'none';
+                // const mostrarBus = painelBus.style.display === 'none';
+                // painelPrecos.style.display = mostrarBus ? 'none' : '';
+                // painelBus.style.display = mostrarBus ? '' : 'none';
             }
             
             atualizarRelogio();
