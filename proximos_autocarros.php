@@ -33,6 +33,7 @@ const STATUS_LABELS = [
     'DELAYED' => 'Atrasado',
     'EARLY'   => 'Adiantado',
     'LATE'    => 'Atrasado',
+    'DELAY'    => 'Atrasado',
 ];
 
 $cacheFile = sys_get_temp_dir() . '/autocarros_agrinha_cache.json';
